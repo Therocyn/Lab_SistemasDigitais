@@ -41,8 +41,59 @@ void loop() {
             client.println("HTTP/1.1 200 OK");
             client.println("Content-type:text/html");
             client.println();
-            client.print("Click <a href=\"/H\">here</a> to turn the LED on pin 2 on.<br>");
-            client.print("Click <a href=\"/L\">here</a> to turn the LED on pin 2 off.<br>");
+            client.print("
+            
+                  <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                        <title>bulma Sandbox</title>
+                    </head>
+                    <body style="width: 50px; height: 30px; margin: 0px;">
+                        <div class="container">
+
+                            <!--BUTTONS-->
+                            <div class="block">
+                                <a href=\"/H\" class="button is-success">On</a>
+                            </div>
+                          
+                        </div><!--container-->
+                        <div style="margin-top:500px"> </div>
+                    </body>
+                    </html>
+            
+            
+            ");
+            client.print("
+            
+                                    <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                            <title>bulma Sandbox</title>
+                        </head>
+                        <body>
+                            <div class="container">
+
+                                <!--BUTTONS-->
+                                <div class="block">
+                                    <a href=\"/L\" class="button is-danger">Off</a>
+                                </div>
+                              
+                            </div><!--container-->
+                            <div style="margin-top:500px"> </div>
+                        </body>
+                        </html>
+            
+            ");
             client.println();
             break;
           } else {
