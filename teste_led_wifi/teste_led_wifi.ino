@@ -1,65 +1,91 @@
 #include <WiFi.h>
  
-const char* ssid = "loginwifi";
-const char* password = "senhawifi";
-int LED = 22;
-WiFiServer server(80);
- 
-void setup() {
-  Serial.begin(115200);
-  pinMode(LED, OUTPUT);
- 
-  Serial.println();
-  Serial.print("Conectando-se a ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
- 
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
- 
-  Serial.println("");
-  Serial.println("WiFi conectada.");
-  Serial.println("Endereço de IP: ");
-  Serial.println(WiFi.localIP());
- 
-  server.begin();
-}
- 
-void loop() {
-  WiFiClient client = server.available();
-  if (client) {
-    Serial.println("New Client.");
-    String currentLine = "";
-    while (client.connected()) {
-      if (client.available()) {
-        char c = client.read();
-        Serial.write(c);
-        if (c == '\n') {
-          if (currentLine.length() == 0) {
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
-            client.println();
-            client.print("Click <a href=\"/H\">here</a> to turn the LED on pin 2 on.<br>");
-            client.print("Click <a href=\"/L\">here</a> to turn the LED on pin 2 off.<br>");
-            client.println();
-            break;
-          } else {
-            currentLine = "";
+    const char* ssid = "loginwifi";
+    const char* password = "senhawifi";
+    int LED = 22;
+    WiFiServer server(80);
+     
+    void setup() {
+      Serial.begin(115200);
+      pinMode(LED, OUTPUT);
+     
+      Serial.println();
+      Serial.print("Conectando-se a ");
+      Serial.println(ssid);
+      WiFi.begin(ssid, password);
+     
+      while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+      }
+     
+      Serial.println("");
+      Serial.println("WiFi conectada.");
+      Serial.println("Endereço de IP: ");
+      Serial.println(WiFi.localIP());
+     
+      server.begin();
+    }
+     
+    void loop() {
+      WiFiClient client = server.available();
+      if (client) {
+        Serial.println("New Client.");
+        String currentLine = "";
+        while (client.connected()) {
+          if (client.available()) {
+            char c = client.read();
+            Serial.write(c);
+            if (c == '\n') {
+              if (currentLine.length() == 0) {
+                client.println("HTTP/1.1 200 OK");
+                client.println("Content-type:text/html");
+                client.println();
+                client.print("
+                
+                      <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                            <title>bulma Sandbox</title>
+                        </head>
+                        <body style="width: 50px; height: 30px; margin: 0px;">
+                            <div class="container">
+    
+                                <!--BUTTONS-->
+                                <div class="block">
+                                    <a href=\"/H\" class="button is-success">On</a>
+                                    <a href=\"/L\" class="button is-danger">Off</a>
+                                </div>
+                              
+                            </div><!--container-->
+                            <div style="margin-top:500px"> </div>
+                        </body>
+                        </html>
+                
+                
+                ");
+                client.println();
+                break;
+              } else {
+                currentLine = "";
+              }
+            } else if (c != '\r') {
+              currentLine += c;
+            }
+            if (currentLine.endsWith("GET /H")) {
+              digitalWrite(LED, HIGH);
+            }
+            if (currentLine.endsWith("GET /L")) {
+              digitalWrite(LED, LOW);
+            }
           }
-        } else if (c != '\r') {
-          currentLine += c;
         }
-        if (currentLine.endsWith("GET /H")) {
-          digitalWrite(LED, HIGH);
-        }
-        if (currentLine.endsWith("GET /L")) {
-          digitalWrite(LED, LOW);
-        }
+        client.stop();
+        Serial.println("Client Disconnected.");
       }
     }
-    client.stop();
-    Serial.println("Client Disconnected.");
-  }
-}
